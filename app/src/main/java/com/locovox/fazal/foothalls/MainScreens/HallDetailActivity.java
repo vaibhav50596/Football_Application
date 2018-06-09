@@ -1,8 +1,12 @@
 package com.locovox.fazal.foothalls.MainScreens;
 
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.app.FragmentManager;
 import android.content.Intent;
-import android.graphics.RadialGradient;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,18 +17,18 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.locovox.fazal.foothalls.Adapters.EventsListAdapter;
-import com.locovox.fazal.foothalls.Adapters.HallsListAdapter;
 import com.locovox.fazal.foothalls.Adapters.ReviewsListAdapter;
 import com.locovox.fazal.foothalls.Models.MD_Event;
 import com.locovox.fazal.foothalls.Models.MD_Hall;
 import com.locovox.fazal.foothalls.Models.MD_Review;
 import com.locovox.fazal.foothalls.R;
+import com.locovox.fazal.foothalls.SQLite.DatabaseHelper;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HallDetailActivity extends AppCompatActivity implements EventsListAdapter.ClickListener {
+public class HallDetailActivity extends FragmentActivity implements EventsListAdapter.ClickListener {
 
     RecyclerView eventsRecyclerView;
     RecyclerView reviewsRecyclerView;
@@ -34,12 +38,14 @@ public class HallDetailActivity extends AppCompatActivity implements EventsListA
     RatingBar hallRating;
     List<MD_Event> eventList = new ArrayList<>();
     Button createEvent;
+    DatabaseHelper dh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hall_detail);
         initViews();
+        dh  = new DatabaseHelper(this);
         init();
         populate();
     }
@@ -69,9 +75,14 @@ public class HallDetailActivity extends AppCompatActivity implements EventsListA
         createEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(HallDetailActivity.this , CreateEventActivity.class);
+                FragmentManager fm = getFragmentManager();
+                CreateEventFragment dFragment = new CreateEventFragment();
+                // Show DialogFragment
+                dFragment.show(fm, "Dialog Fragment");
+
+                //Intent intent = new Intent(HallDetailActivity.this , CreateEventFragment.class);
                 //intent.putExtra("EventDataModel", (Serializable) eventList);
-                startActivity(intent);
+                //startActivity(intent);
             }
         });
 

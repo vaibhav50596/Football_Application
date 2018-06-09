@@ -49,9 +49,9 @@
         <activity android:name=".MainScreens.HallHomeActivity" />
         <activity android:name=".MainScreens.AdminHomeActivity" />
         <activity android:name=".MainScreens.HallDetailActivity" />
-        <activity
-            android:name=".MainScreens.CreateEventActivity"
-            android:windowSoftInputMode="adjustPan|adjustResize" />
+        <!-- <activity
+            android:name=".MainScreCreateEventFragmentvity"
+            android:windowSoftInputMode="adjustPan|adjustResize" /> -->
         <activity android:name=".MainScreens.EventListActivity"></activity>
     </application>
 

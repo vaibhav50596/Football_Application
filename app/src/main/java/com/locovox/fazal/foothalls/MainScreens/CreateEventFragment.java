@@ -1,11 +1,15 @@
 package com.locovox.fazal.foothalls.MainScreens;
 
 import android.app.DatePickerDialog;
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -13,17 +17,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.locovox.fazal.foothalls.Models.MD_Event;
-import com.locovox.fazal.foothalls.Models.MD_Hall;
 import com.locovox.fazal.foothalls.R;
 
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class CreateEventActivity extends AppCompatActivity {
+public class CreateEventFragment extends DialogFragment {
     EditText eventName, eventDuration, eventCapacity;
     TextView selectedDate;
     Calendar myCalendar = Calendar.getInstance();
@@ -32,19 +34,42 @@ public class CreateEventActivity extends AppCompatActivity {
     List<MD_Event> eventList = new ArrayList<>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_event);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View rootView = inflater.inflate(R.layout.fragment_create_event, container,
+                false);
+        getDialog().setTitle("Create Event");
+        return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         initViews();
         init();
     }
 
+
+    /*@Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_create_event);
+        initViews();
+        init();
+    } */
+
     public void initViews(){
-        eventName = (EditText) findViewById(R.id.eventName);
-        eventDuration = (EditText) findViewById(R.id.eventDuration);
-        eventCapacity = (EditText) findViewById(R.id.eventCapacity);
-        selectedDate = (TextView) findViewById(R.id.selectedDate);
-        saveEvent = (Button) findViewById(R.id.saveEvent);
+        eventName = (EditText) getView().findViewById(R.id.eventName);
+        eventDuration = (EditText) getView().findViewById(R.id.eventDuration);
+        eventCapacity = (EditText) getView().findViewById(R.id.eventCapacity);
+        selectedDate = (TextView) getView().findViewById(R.id.selectedDate);
+        saveEvent = (Button) getView().findViewById(R.id.saveEvent);
+
+        // Show soft keyboard automatically and request focus to field
+        eventDuration.requestFocus();
+        eventCapacity.requestFocus();
+        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
     public void init(){
@@ -63,23 +88,34 @@ public class CreateEventActivity extends AppCompatActivity {
                 eventNameStr = eventName.getText().toString();
                 eventDurationStr = eventDuration.getText().toString();
                 eventCapacityStr = eventCapacity.getText().toString();
+                eventSelectedDateStr = selectedDate.getText().toString();
 
-                if((!eventNameStr.isEmpty() || eventNameStr != null || eventNameStr != "") && (!eventCapacityStr.isEmpty() || eventCapacityStr != null || eventCapacityStr != "")
-                   && (!eventDurationStr.isEmpty() || eventDurationStr !=  null || eventDurationStr != "") && (!eventSelectedDateStr.isEmpty() || eventSelectedDateStr != null || eventSelectedDateStr !=""))
+                if((eventNameStr.isEmpty() || eventNameStr.equals(null) || eventNameStr.equals("")) ||
+                   (eventCapacityStr.isEmpty() || eventCapacityStr.equals(null)|| eventCapacityStr.equals("")) ||
+                   (eventDurationStr.isEmpty() || eventDurationStr.equals(null) || eventDurationStr.equals("")) ||
+                   (eventSelectedDateStr.isEmpty() || eventSelectedDateStr.equals(null) || eventSelectedDateStr.equals("")))
                 {
+                    Toast.makeText(getActivity(), "Please fill all details", Toast.LENGTH_LONG).show();
+                    //Snackbar snackbar = Snackbar.make(view, "Please fill all details", Snackbar.LENGTH_LONG);
+                    //snackbar.show();
+
+                } else {
+                    Toast.makeText(getActivity(), "success", Toast.LENGTH_LONG).show();
                     eventListModel.setName(eventNameStr);
                     eventListModel.setTimeInMins(Integer.parseInt(eventDurationStr));
                     eventListModel.setTotalCapacity(Integer.parseInt(eventCapacityStr));
                     eventListModel.setDate(eventSelectedDateStr);
-                    Intent intent = new Intent(CreateEventActivity.this , HallDetailActivity.class);
+                    Intent intent = new Intent(getActivity() , HallDetailActivity.class);
                     intent.putExtra("EventDataModel", eventListModel);
+                    android.app.Fragment prev = getFragmentManager().findFragmentByTag("Dialog Fragment");
+                    if (prev != null) {
+                        DialogFragment df = (DialogFragment) prev;
+                        df.dismiss();
+                    }
                     startActivity(intent);
-                } else {
-                    Toast.makeText(CreateEventActivity.this, "Please fill all details", Toast.LENGTH_LONG).show();
-                    //Snackbar snackbar = Snackbar.make(view, "Please fill all details", Snackbar.LENGTH_LONG);
-                    //snackbar.show();
-                }
 
+
+                }
             }
         });
     }
@@ -98,7 +134,7 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         };
 
-        new DatePickerDialog(CreateEventActivity.this, date, myCalendar
+        new DatePickerDialog(getActivity(), date, myCalendar
                 .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                 myCalendar.get(Calendar.DAY_OF_MONTH)).show();
     }
@@ -107,7 +143,6 @@ public class CreateEventActivity extends AppCompatActivity {
         String myFormat = "MM/dd/yyyy"; //date format
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
         selectedDate.setText(sdf.format(myCalendar.getTime()));
-        eventSelectedDateStr = selectedDate.getText().toString();
     }
 
 }
