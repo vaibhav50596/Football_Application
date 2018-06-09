@@ -1,0 +1,28 @@
+Admin, Halls and players
+
+Start
+Login and registration
+
+Admin
+Player and halls delete
+
+login
+name first and last email pass and position and age also
+
+Halls 
+name , capacity how many players , location implicit write name of address google also 
+review hall
+
+when create event they provide ,capacity (dynamic), price, duration in mins
+
+ABC is Event for 1 PM
+enroll on event capacity decreses
+
+review for halls
+review for players
+
+about us
+
+
+Screens , Splash Screen, Login, Register Player, Register Hall, Main Screen for Player, Main Screen for Hall, Main Screen for Admin.
+Previous Events, Hall Detail Page , About Us.
