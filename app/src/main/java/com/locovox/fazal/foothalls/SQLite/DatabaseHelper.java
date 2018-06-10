@@ -7,6 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 
+import com.locovox.fazal.foothalls.Models.MD_Hall;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Created by admin on 09-06-2018.
@@ -119,8 +124,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
     }
 
-
-
     public Cursor checkLoginDetailsForPlayers(String email, String password)
     {
         String columns[]={col_2};
@@ -136,6 +139,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor res = db.query("registerhall", columns , "hallemail=? and hallpassword=?",new String[]{email,password},null,null,null);
         return res;
     }
+
+    public List<MD_Hall> retrieveHallData(){
+        List<MD_Hall> hallsList = new ArrayList<>();
+        String selectQuery = "SELECT  * FROM " + TABLE_HALL;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery(selectQuery, null);
+
+        while(res.moveToNext()){
+            String name = res.getString(res.getColumnIndex(col_12));
+            String addr = res.getString(res.getColumnIndex(col_13));
+            String cap = res.getString(res.getColumnIndex(col_14));
+            String rev = res.getString(res.getColumnIndex(col_15));
+            String rate = res.getString(res.getColumnIndex(col_16));
+            MD_Hall model = new MD_Hall();
+            model.setName(name);
+            model.setAddress(addr);
+            model.setTotalCapacity(Integer.parseInt(cap));
+            model.setReviewCount(Integer.parseInt(rev));
+            model.setRating(Float.parseFloat(rate));
+            hallsList.add(model);
+        }
+        return hallsList;
+    }
+
 
 
 }

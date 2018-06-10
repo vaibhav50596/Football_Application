@@ -28,11 +28,11 @@ public class PlayerHomeActivity extends AppCompatActivity implements HallsListAd
     RecyclerView hallsRecyclerView;
     HallsListAdapter hallsListAdapter;
     List<MD_Hall> hallsList = new ArrayList<>();
-    DatabaseHelper dh;
     SharedPreferences sharedpreferences;
     public static final String myPreference = "mypref";
     public static final String halldataloaded = "hallDataLoaded";
     public MD_Hall model = new MD_Hall();
+    DatabaseHelper dh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +45,8 @@ public class PlayerHomeActivity extends AppCompatActivity implements HallsListAd
         if(sharedpreferences.getString(halldataloaded, "").equals("") ||
            sharedpreferences.getString(halldataloaded, "").equals(null)){
             loadHallsData();
+        } else {
+            hallsList = dh.retrieveHallData();
         }
         init();
     }
@@ -115,9 +117,10 @@ public class PlayerHomeActivity extends AppCompatActivity implements HallsListAd
 
     //on click of recylcer view item which opens new Activity
     @Override
-    public void onClick(MD_Hall model) {
+    public void onClick(MD_Hall model, int position) {
         Intent intent = new Intent(PlayerHomeActivity.this , HallDetailActivity.class);
         intent.putExtra("HallDataModel", model);
+        intent.putExtra("position", position);
         startActivity(intent);
     }
 }

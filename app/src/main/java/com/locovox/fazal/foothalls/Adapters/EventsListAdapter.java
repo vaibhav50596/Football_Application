@@ -45,8 +45,8 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Vi
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         holder.name.setText(eventsList.get(position).getName());
-        holder.duration.setText(eventsList.get(position).getTimeInMins());
-        holder.capacity.setText(eventsList.get(position).getTotalCapacity());
+        holder.duration.setText(String.valueOf(eventsList.get(position).getTimeInMins()));
+        holder.capacity.setText(String.valueOf(eventsList.get(position).getTotalCapacity()));
         holder.date.setText(eventsList.get(position).getDate());
 
         final MD_Event item = eventsList.get(position);

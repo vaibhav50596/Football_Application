@@ -44,7 +44,7 @@ public class HallsListAdapter extends RecyclerView.Adapter<HallsListAdapter.View
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         holder.name.setText(hallsList.get(position).getName());
         holder.address.setText(hallsList.get(position).getAddress());
@@ -71,7 +71,7 @@ public class HallsListAdapter extends RecyclerView.Adapter<HallsListAdapter.View
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clickListner.onClick(hallsList.get(position));
+                clickListner.onClick(hallsList.get(position), position);
             }
         });
     }
@@ -99,6 +99,6 @@ public class HallsListAdapter extends RecyclerView.Adapter<HallsListAdapter.View
     }
 
     public interface ClickListener {
-        void onClick(MD_Hall model);
+        void onClick(MD_Hall model, int position);
     }
 }

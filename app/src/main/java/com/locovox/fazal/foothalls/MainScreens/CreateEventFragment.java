@@ -2,6 +2,7 @@ package com.locovox.fazal.foothalls.MainScreens;
 
 import android.app.DatePickerDialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -25,7 +26,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class CreateEventFragment extends DialogFragment {
+public class CreateEventFragment extends DialogFragment implements DialogInterface.OnDismissListener {
     EditText eventName, eventDuration, eventCapacity;
     TextView selectedDate;
     Calendar myCalendar = Calendar.getInstance();
@@ -107,11 +108,12 @@ public class CreateEventFragment extends DialogFragment {
                     eventListModel.setDate(eventSelectedDateStr);
                     Intent intent = new Intent(getActivity() , HallDetailActivity.class);
                     intent.putExtra("EventDataModel", eventListModel);
-                    android.app.Fragment prev = getFragmentManager().findFragmentByTag("Dialog Fragment");
-                    if (prev != null) {
-                        DialogFragment df = (DialogFragment) prev;
-                        df.dismiss();
-                    }
+                    getDialog().dismiss();
+                    //android.app.Fragment prev = getFragmentManager().findFragmentByTag("Dialog Fragment");
+                    //if (prev != null) {
+                    //    DialogFragment df = (DialogFragment) prev;
+                    //    df.dismiss();
+                    //}
                     startActivity(intent);
 
 
@@ -120,6 +122,7 @@ public class CreateEventFragment extends DialogFragment {
         });
     }
 
+    public interface DialogInterface{}
 
     public void selectDate() {
         DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {

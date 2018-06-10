@@ -1,6 +1,7 @@
 package com.locovox.fazal.foothalls.RegisterScreens;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -67,7 +68,7 @@ public class HallRegisterActivity extends AppCompatActivity {
 
                 else
                 {
-                    boolean isinserted =dh.insertHallData(hallNameStr, hallEmailStr,hallAddressStr, hallAboutStr, hallPasswordStr);
+                    boolean isinserted =dh.insertHallRegisterData(hallNameStr, hallEmailStr,hallAddressStr, hallAboutStr, hallPasswordStr);
 
                     if (isinserted == true)
                         Toast.makeText(getApplicationContext(), "Hall Registered successfully", Toast.LENGTH_SHORT).show();
@@ -82,9 +83,10 @@ public class HallRegisterActivity extends AppCompatActivity {
 
     }
 
+
     public void initviews()
     {
-        hallName= (EditText)findViewById(R.id.hallName);
+        hallName= (EditText) findViewById(R.id.hallName);
         hallEmail= (EditText)findViewById(R.id.hallEmail);
         hallAddress = (TextView) findViewById(R.id.hallAddress);
         hallAbout = (EditText)findViewById(R.id.hallAbout);

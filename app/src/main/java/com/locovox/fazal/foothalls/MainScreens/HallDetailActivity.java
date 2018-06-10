@@ -37,6 +37,7 @@ public class HallDetailActivity extends FragmentActivity implements EventsListAd
     TextView hallName, hallAddress, hallCapacity, hallReview, eventsMessageWarning;
     RatingBar hallRating;
     List<MD_Event> eventList = new ArrayList<>();
+    List<MD_Hall> hallsList = new ArrayList<>();
     Button createEvent;
     DatabaseHelper dh;
 
@@ -63,9 +64,12 @@ public class HallDetailActivity extends FragmentActivity implements EventsListAd
     }
 
     public void init(){
+        hallsList = dh.retrieveHallData();
         MD_Hall hallListModel = (MD_Hall) getIntent().getSerializableExtra("HallDataModel");
         MD_Event eventListModel = (MD_Event) getIntent().getSerializableExtra("EventDataModel");
+        int position = (int) getIntent().getIntExtra("position", 0);
 
+        hallListModel = hallsList.get(position);
         hallName.setText(hallListModel.getName());
         hallAddress.setText(hallListModel.getAddress());
         hallCapacity.setText(String.valueOf(hallListModel.getTotalCapacity()));
@@ -93,10 +97,10 @@ public class HallDetailActivity extends FragmentActivity implements EventsListAd
 
         if(eventListModel != null) {
 
-            for (int i = 0; i < hallListModel.getTotalCapacity(); i++) {
+            for (int i = 0; i < 1; i++) {
                 eventList.add(eventListModel);
             }
-
+            //eventList.add(eventListModel);
             //setting up GridLayoutManager in events recycler view
             GridLayoutManager gridLayoutManager = new GridLayoutManager(HallDetailActivity.this, 2, GridLayoutManager.VERTICAL, false);
             eventsRecyclerView.setLayoutManager(gridLayoutManager);
@@ -104,6 +108,7 @@ public class HallDetailActivity extends FragmentActivity implements EventsListAd
             //setting up EventListAdapter in events recycler view
             eventsListAdapter = new EventsListAdapter(this, eventList, HallDetailActivity.this);
             eventsRecyclerView.setAdapter(eventsListAdapter);
+            eventsMessageWarning.setVisibility(View.GONE);
         } else {
             if(eventList.size() == 0 || eventList == null){
                 eventsMessageWarning.setVisibility(View.VISIBLE);
