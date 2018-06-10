@@ -10,9 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
-
-
-import com.facebook.stetho.Stetho;
 import com.locovox.fazal.foothalls.Adapters.EventsListAdapter;
 import com.locovox.fazal.foothalls.Adapters.HallsListAdapter;
 import com.locovox.fazal.foothalls.Models.MD_Hall;
@@ -37,7 +34,7 @@ public class PlayerHomeActivity extends AppCompatActivity implements HallsListAd
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Stetho.initializeWithDefaults(this);
+
         setContentView(R.layout.activity_player_home);
         setTitle("Halls");
         dh  = new DatabaseHelper(this);

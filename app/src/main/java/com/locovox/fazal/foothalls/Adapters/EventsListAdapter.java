@@ -42,7 +42,7 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
 
         holder.name.setText(eventsList.get(position).getName());
         holder.duration.setText(String.valueOf(eventsList.get(position).getTimeInMins()));
@@ -55,7 +55,7 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Vi
             public void onClick(View view) {
                 final int[] val = {0};
                 new MaterialDialog.Builder(context)
-                        .title("Register In Event")
+                        .title("Register For Event")
                         .inputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL)
                         .inputRange(1,item.totalCapacity)
                         .input("Number Of Players", "", new MaterialDialog.InputCallback() {
@@ -65,12 +65,15 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Vi
                             }
                         })
                         .positiveText("Register")
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        /*.onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                item.totalCapacity = item.totalCapacity - val[0];
+                                //int countPlayers = Integer.parseInt(dialog.getInputEditText().toString());
+                                //int remainingCapacityOfPlayers = eventsList.get(position).getTotalCapacity() - countPlayers;
+                               // item.totalCapacity = item.totalCapacity - val[0];
+                                //clickListner.onClick(remainingCapacityOfPlayers, position);
                             }
-                        })
+                        }) */
                         .show();
             }
         });

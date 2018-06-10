@@ -7,7 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.facebook.stetho.Stetho;
+
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.locovox.fazal.foothalls.R;
 import com.locovox.fazal.foothalls.SQLite.DatabaseHelper;
@@ -25,7 +25,6 @@ public class PlayerRegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Stetho.initializeWithDefaults(this);
         setContentView(R.layout.activity_user_register);
         initViews();
         dh  = new DatabaseHelper(this);

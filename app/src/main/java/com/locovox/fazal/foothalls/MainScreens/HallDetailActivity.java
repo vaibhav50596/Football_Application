@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.locovox.fazal.foothalls.Adapters.EventsListAdapter;
 import com.locovox.fazal.foothalls.Adapters.ReviewsListAdapter;
@@ -37,9 +38,11 @@ public class HallDetailActivity extends FragmentActivity implements EventsListAd
     TextView hallName, hallAddress, hallCapacity, hallReview, eventsMessageWarning;
     RatingBar hallRating;
     List<MD_Event> eventList = new ArrayList<>();
+    List<MD_Event> eventAnotherList = new ArrayList<>();
     List<MD_Hall> hallsList = new ArrayList<>();
     Button createEvent;
     DatabaseHelper dh;
+    int countEvents = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +69,8 @@ public class HallDetailActivity extends FragmentActivity implements EventsListAd
     public void init(){
         hallsList = dh.retrieveHallData();
         MD_Hall hallListModel = (MD_Hall) getIntent().getSerializableExtra("HallDataModel");
-        MD_Event eventListModel = (MD_Event) getIntent().getSerializableExtra("EventDataModel");
+        //MD_Event eventListModel = (MD_Event) getIntent().getSerializableExtra("EventDataModel");
+        MD_Event eventListModel = new MD_Event();
         int position = (int) getIntent().getIntExtra("position", 0);
 
         hallListModel = hallsList.get(position);
@@ -76,44 +80,52 @@ public class HallDetailActivity extends FragmentActivity implements EventsListAd
         hallReview.setText(String.valueOf(hallListModel.getReviewCount()));
         hallRating.setRating(Float.parseFloat(String.valueOf(hallListModel.getRating())));
 
-        createEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentManager fm = getFragmentManager();
-                CreateEventFragment dFragment = new CreateEventFragment();
-                // Show DialogFragment
-                dFragment.show(fm, "Dialog Fragment");
 
-                //Intent intent = new Intent(HallDetailActivity.this , CreateEventFragment.class);
-                //intent.putExtra("EventDataModel", (Serializable) eventList);
-                //startActivity(intent);
-            }
-        });
 
         //if(eventList.size() == 0 || eventList == null){
            // eventsMessageWarning.setVisibility(View.VISIBLE);
         //}
         //ArrayList<MD_Event> events = new ArrayList<>();
-
-        if(eventListModel != null) {
-
-            for (int i = 0; i < 1; i++) {
-                eventList.add(eventListModel);
+        eventList = dh.retrieveEventData();
+        eventListModel = eventList.get(position);
+        if(eventList != null) {
+            for(int i=0; i<eventList.size(); i++){
+                eventAnotherList.add(eventListModel);
             }
+            //eventList.add(eventListModel);
             //eventList.add(eventListModel);
             //setting up GridLayoutManager in events recycler view
             GridLayoutManager gridLayoutManager = new GridLayoutManager(HallDetailActivity.this, 2, GridLayoutManager.VERTICAL, false);
             eventsRecyclerView.setLayoutManager(gridLayoutManager);
 
             //setting up EventListAdapter in events recycler view
-            eventsListAdapter = new EventsListAdapter(this, eventList, HallDetailActivity.this);
+            eventsListAdapter = new EventsListAdapter(this, eventAnotherList, HallDetailActivity.this);
             eventsRecyclerView.setAdapter(eventsListAdapter);
+
+            if(eventsRecyclerView.getAdapter() != null){
+                countEvents = eventsRecyclerView.getAdapter().getItemCount();
+            }
             eventsMessageWarning.setVisibility(View.GONE);
         } else {
-            if(eventList.size() == 0 || eventList == null){
+            if (eventList.size() == 0 || eventList == null) {
                 eventsMessageWarning.setVisibility(View.VISIBLE);
             }
         }
+
+        if(countEvents < hallListModel.getTotalCapacity()){
+            createEvent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    FragmentManager fm = getFragmentManager();
+                    CreateEventFragment dFragment = new CreateEventFragment();
+                    // Show DialogFragment and user is able to create event when recycler item count is less than total capacity of halls
+                    dFragment.show(fm, "Dialog Fragment");
+                }
+            });
+        } else {
+            Toast.makeText(HallDetailActivity.this, "You have exceeded limit of hall, please select another hall ", Toast.LENGTH_LONG).show();
+        }
+
 
         reviewsListAdapter = new ReviewsListAdapter(this,new ArrayList<MD_Review>());
         reviewsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -126,6 +138,7 @@ public class HallDetailActivity extends FragmentActivity implements EventsListAd
 
     @Override
     public void onClick() {
+        //eventList.get(position).setTotalCapacity(remainingCapacityOfPlayers);
         //Intent intent = new Intent(PlayerHomeActivity.this , HallDetailActivity.class);
         //intent.putExtra("HallDataModel", model);
         //startActivity(intent);

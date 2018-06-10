@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.locovox.fazal.foothalls.Models.MD_Event;
 import com.locovox.fazal.foothalls.R;
+import com.locovox.fazal.foothalls.SQLite.DatabaseHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import java.util.Locale;
 public class CreateEventFragment extends DialogFragment implements DialogInterface.OnDismissListener {
     EditText eventName, eventDuration, eventCapacity;
     TextView selectedDate;
+    DatabaseHelper dh;
     Calendar myCalendar = Calendar.getInstance();
     String eventNameStr, eventDurationStr, eventCapacityStr, eventSelectedDateStr;
     Button saveEvent;
@@ -37,6 +39,7 @@ public class CreateEventFragment extends DialogFragment implements DialogInterfa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_create_event, container,
                 false);
@@ -47,6 +50,7 @@ public class CreateEventFragment extends DialogFragment implements DialogInterfa
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        dh = new DatabaseHelper(getActivity());
         initViews();
         init();
     }
@@ -106,16 +110,18 @@ public class CreateEventFragment extends DialogFragment implements DialogInterfa
                     eventListModel.setTimeInMins(Integer.parseInt(eventDurationStr));
                     eventListModel.setTotalCapacity(Integer.parseInt(eventCapacityStr));
                     eventListModel.setDate(eventSelectedDateStr);
-                    Intent intent = new Intent(getActivity() , HallDetailActivity.class);
-                    intent.putExtra("EventDataModel", eventListModel);
-                    getDialog().dismiss();
-                    //android.app.Fragment prev = getFragmentManager().findFragmentByTag("Dialog Fragment");
-                    //if (prev != null) {
-                    //    DialogFragment df = (DialogFragment) prev;
-                    //    df.dismiss();
-                    //}
-                    startActivity(intent);
-
+                    boolean isinserted = dh.insertEventData(eventListModel.getName(),eventListModel.getDate(),String.valueOf(eventListModel.getTimeInMins()),String.valueOf(eventListModel.getTotalCapacity()));
+                    if(isinserted) {
+                        Toast.makeText(getActivity(),"Event Created Successfully",Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getActivity(), HallDetailActivity.class);
+                       // intent.putExtra("EventDataModel", eventListModel);
+                        getDialog().dismiss();
+                        startActivity(intent);
+                    }
+                    else
+                    {
+                        Toast.makeText(getActivity(),"Event not Created",Toast.LENGTH_LONG).show();
+                    }
 
                 }
             }

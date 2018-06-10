@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 
+import com.locovox.fazal.foothalls.Models.MD_Event;
 import com.locovox.fazal.foothalls.Models.MD_Hall;
 
 import java.util.ArrayList;
@@ -46,14 +47,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String col_15 = "hallreview";
     public static final String col_16 = "hallrating";
 
+    public static final String TABLE_EVENT = "eventdata";
+    public static final String col_17 = "eventname";
+    public static final String col_18 = "eventdate";
+    public static final String col_19 = "eventtime";
+    public static final String col_20 = "hallcapacity";
+
+
+
     //create statements
     private static final String SQL_REGISTER_PLAYER =" Create TABLE " + TABLE_PLAYER + "(" + col_1 + " TEXT, " + col_2 + " TEXT, " + col_3 + " integer , " + col_4 + " TEXT, " + col_5 + " TEXT  )" ;
     private static final String SQL_HALL_DATA =" Create TABLE " + TABLE_HALL + "(" + col_12 + " TEXT, " + col_13 + " TEXT, " + col_14 + " integer , " + col_15 + " integer, " + col_16 + " float  )" ;
     private static final String SQL_REGISTER_HALL =" Create TABLE " + TABLE_HALLDATA + "(" + col_6 + " TEXT, " + col_7 + " TEXT, " + col_8 + " TEXT , " + col_9 + " TEXT, " + col_10 + " TEXT  )" ;
+    private static final String SQL_EVENT_DATA =" Create TABLE " + TABLE_EVENT + "(" + col_17 + " TEXT, " + col_18 + " TEXT, " + col_19 + " TEXT , " + col_20 + " TEXT  )" ;
 
 
     public DatabaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, 3);
+        super(context, DATABASE_NAME, null, 4);
     }
 
 
@@ -62,6 +72,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_REGISTER_PLAYER);
         db.execSQL(SQL_HALL_DATA);
         db.execSQL(SQL_REGISTER_HALL);
+        db.execSQL(SQL_EVENT_DATA);
     }
 
     @Override
@@ -69,6 +80,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE  IF EXISTS " + TABLE_PLAYER);
         db.execSQL("DROP TABLE  IF EXISTS " + TABLE_HALL);
         db.execSQL("DROP TABLE  IF EXISTS " + TABLE_HALLDATA);
+        db.execSQL("DROP TABLE  IF EXISTS " + TABLE_EVENT);
         onCreate(db);
 
     }
@@ -107,7 +119,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
     }
 
-
     public boolean insertHallRegisterData(String name, String email, String address, String about, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -122,6 +133,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return false;
         else
             return true;
+    }
+
+    public boolean insertEventData(String hallName,String date,String time,String capacity)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(col_17, hallName);
+        cv.put(col_18, date);
+        cv.put(col_19, time);
+        cv.put(col_20, capacity);
+        ;
+
+        long result = db.insert(TABLE_EVENT, null, cv);
+        if (result == -1)
+            return false;
+        else
+            return true;
+
     }
 
     public Cursor checkLoginDetailsForPlayers(String email, String password)
@@ -163,8 +192,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return hallsList;
     }
 
+    public List<MD_Event> retrieveEventData(){
+        List<MD_Event> eventList = new ArrayList<>();
+        String selectQuery = "SELECT  * FROM " + TABLE_EVENT;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery(selectQuery, null);
 
+        while(res.moveToNext()){
+            String name = res.getString(res.getColumnIndex(col_17));
+            String date = res.getString(res.getColumnIndex(col_18));
+            String time = res.getString(res.getColumnIndex(col_19));
+            String capacity = res.getString(res.getColumnIndex(col_20));
 
+            MD_Event model = new MD_Event();
+            model.setName(name);
+            model.setDate(date);
+            model.setTimeInMins(Integer.parseInt(time));
+            model.setTotalCapacity(Integer.parseInt(capacity));
+
+            eventList.add(model);
+        }
+        return eventList;
+    }
 }
 
 
