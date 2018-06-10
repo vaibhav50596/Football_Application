@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.facebook.stetho.Stetho;
 import com.locovox.fazal.foothalls.MainScreens.PlayerHomeActivity;
 import com.locovox.fazal.foothalls.R;
 import com.locovox.fazal.foothalls.RegisterScreens.PlayerRegisterActivity;
@@ -23,6 +24,7 @@ public class PlayerLoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Stetho.initializeWithDefaults(this);
         setContentView(R.layout.activity_player_login);
         dh = new DatabaseHelper(this);
         initviews();
@@ -45,7 +47,7 @@ public class PlayerLoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 playerPasswordStr=playerpassword.getText().toString();
                 playerEmailStr=playeremail.getText().toString();
-               Cursor res =  dh.checkLoginDetails(playerEmailStr,playerPasswordStr);
+               Cursor res =  dh.checkLoginDetailsForPlayers(playerEmailStr,playerPasswordStr);
                 if (res.getCount() == 0) {
                     Toast.makeText(getApplicationContext(), "Wrong EmailId or Password ", Toast.LENGTH_LONG).show();
                     return;

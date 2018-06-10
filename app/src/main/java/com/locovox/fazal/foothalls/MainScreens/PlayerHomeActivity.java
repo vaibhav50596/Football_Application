@@ -1,6 +1,8 @@
 package com.locovox.fazal.foothalls.MainScreens;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,10 +12,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
+import com.facebook.stetho.Stetho;
 import com.locovox.fazal.foothalls.Adapters.EventsListAdapter;
 import com.locovox.fazal.foothalls.Adapters.HallsListAdapter;
 import com.locovox.fazal.foothalls.Models.MD_Hall;
 import com.locovox.fazal.foothalls.R;
+import com.locovox.fazal.foothalls.SQLite.DatabaseHelper;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -24,18 +28,28 @@ public class PlayerHomeActivity extends AppCompatActivity implements HallsListAd
     RecyclerView hallsRecyclerView;
     HallsListAdapter hallsListAdapter;
     List<MD_Hall> hallsList = new ArrayList<>();
+    DatabaseHelper dh;
+    SharedPreferences sharedpreferences;
+    public static final String myPreference = "mypref";
+    public static final String halldataloaded = "hallDataLoaded";
+    public MD_Hall model = new MD_Hall();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Stetho.initializeWithDefaults(this);
         setContentView(R.layout.activity_player_home);
         setTitle("Halls");
-        loadHallsData();
+        dh  = new DatabaseHelper(this);
+        sharedpreferences = getSharedPreferences(String.valueOf(myPreference), Context.MODE_PRIVATE);
+        if(sharedpreferences.getString(halldataloaded, "").equals("") ||
+           sharedpreferences.getString(halldataloaded, "").equals(null)){
+            loadHallsData();
+        }
         init();
     }
 
     //This method sets data of hall in model which will be used by HallsListAdapter in order to show in the list format
-
     public void loadHallsData(){
         String hallNames[]={"Pro Football Hall of Fame","Tom Beck","Matty Bell","Mike Bellotti","Hugo Bezdek","Roy Kidd",
                 "Ralph Jordan", "Frank Kush","Andrew Kerr","Bill Ingram"};
@@ -51,15 +65,28 @@ public class PlayerHomeActivity extends AppCompatActivity implements HallsListAd
         float ratings[]={2.6f,3f,4f,4.6f,4f,2.6f,3f,4f,4.6f,4f};
 
         for(int i=0; i<hallNames.length; i++){
-            MD_Hall model = new MD_Hall();
+            //insert static hall data into MD_Hall model
             model.setName(hallNames[i]);
             model.setAddress(hallAddresses[i]);
             model.setTotalCapacity(hallTotalCapacity[i]);
             model.setReviewCount(hallReviews[i]);
             model.setRating(ratings[i]);
+            //insert static hall data into hallList list
             hallsList.add(model);
+            //insert hall data in table
+            boolean isInserted = dh.insertHallData(model.getName(),model.getAddress(),model.getTotalCapacity(),model.getReviewCount(),model.getRating());
+            if(isInserted){
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putString(halldataloaded, "DataLoaded");
+                editor.commit();
+            }
         }
+    }
 
+    public void loadDataInHallTable(){
+        for(int i=0; i<hallsList.size(); i++){
+
+        }
     }
 
     //setting up LinearLayout Manager and HallsListAdapter in recycler view
