@@ -11,6 +11,10 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -23,16 +27,23 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 import com.locovox.fazal.foothalls.R;
+import com.locovox.fazal.foothalls.SQLite.DatabaseHelper;
 
 public class HallRegisterActivity extends AppCompatActivity {
 
     private final static int PLACE_PICKER_REQUEST = 999;
     boolean locPermGranted;
-
+    EditText hallName,hallEmail,hallAbout,password,confirmpass;
+    TextView hallAddress;
+    Button registerHall;
+    DatabaseHelper dh;
+    String hallNameStr,hallEmailStr,hallAboutStr,hallPasswordStr,hallConfirmpassStr,hallAddressStr;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hall_register);
+        dh = new DatabaseHelper(this);
+        initviews();
         init();
     }
 
@@ -40,7 +51,46 @@ public class HallRegisterActivity extends AppCompatActivity {
 
         locPermGranted = false;
         requestLocation();
+        registerHall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hallNameStr = hallName.getText().toString();
+                hallEmailStr = hallEmail.getText().toString();
+                hallAboutStr = hallAbout.getText().toString();
+                hallAddressStr = hallAddress.getText().toString();
+                hallPasswordStr = password.getText().toString();
+                hallConfirmpassStr = confirmpass.getText().toString();
+                if(!hallPasswordStr.equals(hallConfirmpassStr))
+                {
+                    Toast.makeText(HallRegisterActivity.this,"Password does not match",Toast.LENGTH_LONG).show();
+                }
 
+                else
+                {
+                    boolean isinserted =dh.insertHallData(hallNameStr, hallEmailStr,hallAddressStr, hallAboutStr, hallPasswordStr);
+
+                    if (isinserted == true)
+                        Toast.makeText(getApplicationContext(), "Hall Registered successfully", Toast.LENGTH_SHORT).show();
+
+                    else
+                        Toast.makeText(getApplicationContext(), "Hall Register Unsuccessfull", Toast.LENGTH_LONG).show();
+
+                }
+
+            }
+        });
+
+    }
+
+    public void initviews()
+    {
+        hallName= (EditText)findViewById(R.id.hallName);
+        hallEmail= (EditText)findViewById(R.id.hallEmail);
+        hallAddress = (TextView) findViewById(R.id.hallAddress);
+        hallAbout = (EditText)findViewById(R.id.hallAbout);
+        password = (EditText)findViewById(R.id.hallpass);
+        confirmpass= (EditText)findViewById(R.id.hallconfirmpass);
+        registerHall = (Button)findViewById(R.id.buttonRegisterHall);
     }
 
     public void requestLocation(){

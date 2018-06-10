@@ -55,6 +55,7 @@
             android:textColor="#fff"
             android:inputType="textEmailAddress"
             android:background="@drawable/app_edittext_drawable"
+            android:id="@+id/hallEmailLogin"
             />
         <EditText
             android:layout_width="match_parent"
@@ -68,9 +69,10 @@
             android:textColor="#fff"
             android:inputType="textPassword"
             android:background="@drawable/app_edittext_drawable"
+            android:id="@+id/hallPasswordLogin"
             />
         <Button
-            android:id="@+id/buttonLoginPlayer"
+            android:id="@+id/buttonLoginHall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="@dimen/_30sdp"
@@ -82,7 +84,7 @@
             android:textColor="#fff"
             android:textSize="@dimen/_18ssp"
             android:textAllCaps="false"
-            android:onClick="loginHall"
+
             android:text="Login"
             />
 
