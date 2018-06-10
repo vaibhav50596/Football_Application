@@ -18,12 +18,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //player registration table
     public static final String TABLE_PLAYER = "registerplayer";
+
     public static final String col_1 = "name";
     public static final String col_2 = "email";
     public static final String col_3 = "age";
     public static final String col_4 = "password";
     public static final String col_5 = "position";
 
+
+    //hall registration table
+    public static final String TABLE_HALLDATA = "registerhall";
+    public static final String col_6 = "hallname";
+    public static final String col_7 = "hallemail";
+    public static final String col_8 = "address";
+    public static final String col_9 = "about";
+    public static final String col_10 = "hallpassword";
     //hall data table
     public static final String TABLE_HALL = "halldata";
     public static final String col_12 = "hallname";
@@ -35,10 +44,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //create statements
     private static final String SQL_REGISTER_PLAYER =" Create TABLE " + TABLE_PLAYER + "(" + col_1 + " TEXT, " + col_2 + " TEXT, " + col_3 + " integer , " + col_4 + " TEXT, " + col_5 + " TEXT  )" ;
     private static final String SQL_HALL_DATA =" Create TABLE " + TABLE_HALL + "(" + col_12 + " TEXT, " + col_13 + " TEXT, " + col_14 + " integer , " + col_15 + " integer, " + col_16 + " float  )" ;
+    private static final String SQL_REGISTER_HALL =" Create TABLE " + TABLE_HALLDATA + "(" + col_6 + " TEXT, " + col_7 + " TEXT, " + col_8 + " TEXT , " + col_9 + " TEXT, " + col_10 + " TEXT  )" ;
 
 
     public DatabaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, 2);
+        super(context, DATABASE_NAME, null, 3);
     }
 
 
@@ -46,12 +56,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_REGISTER_PLAYER);
         db.execSQL(SQL_HALL_DATA);
+        db.execSQL(SQL_REGISTER_HALL);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldversion, int newversion) {
         db.execSQL("DROP TABLE  IF EXISTS " + TABLE_PLAYER);
         db.execSQL("DROP TABLE  IF EXISTS " + TABLE_HALL);
+        db.execSQL("DROP TABLE  IF EXISTS " + TABLE_HALLDATA);
         onCreate(db);
 
     }
@@ -91,12 +103,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
+    public boolean insertHallRegisterData(String name, String email, String address, String about, String password) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(col_6,name);
+        cv.put(col_7, email);
+        cv.put(col_8, address);
+        cv.put(col_9, about);
+        cv.put(col_10, password);
+
+        long result = db.insert(TABLE_HALLDATA, null, cv);
+        if (result == -1)
+            return false;
+        else
+            return true;
+    }
+
+
 
     public Cursor checkLoginDetailsForPlayers(String email, String password)
     {
         String columns[]={col_2};
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.query("registerplayer", columns , "email=? and password=?",new String[]{email,password},null,null,null);
+        return res;
+    }
+
+    public Cursor checkHallLoginDetails(String email,String password)
+    {
+        String columns[]={col_7};
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.query("registerhall", columns , "hallemail=? and hallpassword=?",new String[]{email,password},null,null,null);
         return res;
     }
 
