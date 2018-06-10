@@ -86,6 +86,7 @@
                 android:background="@drawable/app_edittext_drawable"
                 android:onClick="getLocation"
                 android:id="@+id/hallAddress"
+                android:visibility="gone"
                 />
 
             <EditText

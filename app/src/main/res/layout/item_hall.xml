@@ -115,7 +115,8 @@
                         android:textAllCaps="false"
                         android:textSize="@dimen/_12ssp"
                         android:background="@drawable/app_button_green_drawable"
-                        android:text="View Details" />
+                        android:text="View Details"
+                        android:visibility="gone"/>
                 </LinearLayout>
 
             </LinearLayout>

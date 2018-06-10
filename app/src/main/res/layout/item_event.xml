@@ -113,7 +113,7 @@
 
                 <Button
                     android:id="@+id/registerEventButton"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/_80sdp"
                     android:layout_height="@dimen/_17sdp"
                     android:textColor="#fff"
                     android:layout_marginTop="@dimen/_5sdp"

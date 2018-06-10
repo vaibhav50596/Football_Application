@@ -43,6 +43,8 @@ public class HallDetailActivity extends FragmentActivity implements EventsListAd
     Button createEvent;
     DatabaseHelper dh;
     int countEvents = 0;
+    String user,userType="";
+    int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +73,8 @@ public class HallDetailActivity extends FragmentActivity implements EventsListAd
         MD_Hall hallListModel = (MD_Hall) getIntent().getSerializableExtra("HallDataModel");
         //MD_Event eventListModel = (MD_Event) getIntent().getSerializableExtra("EventDataModel");
         MD_Event eventListModel = new MD_Event();
-        int position = (int) getIntent().getIntExtra("position", 0);
-
+        position = (int) getIntent().getIntExtra("position", 0);
+        user = getIntent().getStringExtra("user");
         hallListModel = hallsList.get(position);
         hallName.setText(hallListModel.getName());
         hallAddress.setText(hallListModel.getAddress());
@@ -80,18 +82,23 @@ public class HallDetailActivity extends FragmentActivity implements EventsListAd
         hallReview.setText(String.valueOf(hallListModel.getReviewCount()));
         hallRating.setRating(Float.parseFloat(String.valueOf(hallListModel.getRating())));
 
-
+        if(user.equalsIgnoreCase("Player")){
+            createEvent.setVisibility(View.GONE);
+        } else {
+            createEvent.setVisibility(View.VISIBLE);
+        }
 
         //if(eventList.size() == 0 || eventList == null){
            // eventsMessageWarning.setVisibility(View.VISIBLE);
         //}
         //ArrayList<MD_Event> events = new ArrayList<>();
         eventList = dh.retrieveEventData();
-        eventListModel = eventList.get(position);
-        if(eventList != null) {
-            for(int i=0; i<eventList.size(); i++){
+        hallListModel.setEventListInside(eventList);
+        //eventListModel = eventList.get(position);
+        if(eventList != null && eventList.size() != 0) {
+            /*for(int i=0; i<eventList.size(); i++){
                 eventAnotherList.add(eventListModel);
-            }
+            }*/
             //eventList.add(eventListModel);
             //eventList.add(eventListModel);
             //setting up GridLayoutManager in events recycler view
@@ -99,7 +106,7 @@ public class HallDetailActivity extends FragmentActivity implements EventsListAd
             eventsRecyclerView.setLayoutManager(gridLayoutManager);
 
             //setting up EventListAdapter in events recycler view
-            eventsListAdapter = new EventsListAdapter(this, eventAnotherList, HallDetailActivity.this);
+            eventsListAdapter = new EventsListAdapter(this, hallListModel, HallDetailActivity.this);
             eventsRecyclerView.setAdapter(eventsListAdapter);
 
             if(eventsRecyclerView.getAdapter() != null){
@@ -117,7 +124,11 @@ public class HallDetailActivity extends FragmentActivity implements EventsListAd
                 @Override
                 public void onClick(View view) {
                     FragmentManager fm = getFragmentManager();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("userType", user);
+                    bundle.putInt("position", position);
                     CreateEventFragment dFragment = new CreateEventFragment();
+                    dFragment.setArguments(bundle);
                     // Show DialogFragment and user is able to create event when recycler item count is less than total capacity of halls
                     dFragment.show(fm, "Dialog Fragment");
                 }

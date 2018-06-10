@@ -35,6 +35,8 @@ public class CreateEventFragment extends DialogFragment implements DialogInterfa
     String eventNameStr, eventDurationStr, eventCapacityStr, eventSelectedDateStr;
     Button saveEvent;
     List<MD_Event> eventList = new ArrayList<>();
+    String userType;
+    int position;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,7 +81,8 @@ public class CreateEventFragment extends DialogFragment implements DialogInterfa
 
     public void init(){
         final MD_Event eventListModel = new MD_Event();
-
+        userType = getArguments().getString("userType");
+        position = getArguments().getInt("position");
         selectedDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,7 +108,6 @@ public class CreateEventFragment extends DialogFragment implements DialogInterfa
                     //snackbar.show();
 
                 } else {
-                    Toast.makeText(getActivity(), "success", Toast.LENGTH_LONG).show();
                     eventListModel.setName(eventNameStr);
                     eventListModel.setTimeInMins(Integer.parseInt(eventDurationStr));
                     eventListModel.setTotalCapacity(Integer.parseInt(eventCapacityStr));
@@ -115,6 +117,8 @@ public class CreateEventFragment extends DialogFragment implements DialogInterfa
                         Toast.makeText(getActivity(),"Event Created Successfully",Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(getActivity(), HallDetailActivity.class);
                        // intent.putExtra("EventDataModel", eventListModel);
+                        intent.putExtra("user", userType);
+                        intent.putExtra("position", position);
                         getDialog().dismiss();
                         startActivity(intent);
                     }

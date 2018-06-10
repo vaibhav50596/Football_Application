@@ -53,7 +53,7 @@ public class HallsListAdapter extends RecyclerView.Adapter<HallsListAdapter.View
         holder.ratingBar.setRating(Float.parseFloat(String.valueOf(hallsList.get(position).getRating())));
 
 
-        holder.viewDetial.setOnClickListener(new View.OnClickListener() {
+        /*holder.viewDetial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context , HallDetailActivity.class);
@@ -66,7 +66,7 @@ public class HallsListAdapter extends RecyclerView.Adapter<HallsListAdapter.View
                 context.startActivity(intent);
                 //context.startActivity(new Intent(context, HallDetailActivity.class));
             }
-        });
+        }); */
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

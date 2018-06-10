@@ -5,6 +5,8 @@ import android.media.Rating;
 import android.os.Parcelable;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Fazal Ur Rehman on 6/4/2018.
@@ -18,6 +20,26 @@ public class MD_Hall implements Serializable {
     public int reviewCount;
     public float rating;
     public String about;
+    public String userType;
+
+    public List<MD_Event> getEventListInside() {
+        return eventListInside;
+    }
+
+    public void setEventListInside(List<MD_Event> eventListInside) {
+        this.eventListInside = eventListInside;
+    }
+
+    public List<MD_Event> eventListInside;
+
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
 
     public int getId() {
         return id;

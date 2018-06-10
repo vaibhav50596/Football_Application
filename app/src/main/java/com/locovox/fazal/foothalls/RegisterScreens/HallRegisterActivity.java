@@ -61,23 +61,33 @@ public class HallRegisterActivity extends AppCompatActivity {
                 hallAddressStr = hallAddress.getText().toString();
                 hallPasswordStr = password.getText().toString();
                 hallConfirmpassStr = confirmpass.getText().toString();
-                if(!hallPasswordStr.equals(hallConfirmpassStr))
+                if (( hallNameStr == null || hallNameStr.equals("")) ||
+                        (hallEmailStr == null || hallEmailStr.equals("")) ||
+                        (hallAboutStr == null || hallAboutStr.equals("")) ||
+                        (hallPasswordStr == null || hallPasswordStr.equals(""))||
+                        (hallConfirmpassStr == null || hallConfirmpassStr.equals("")))
                 {
-                    Toast.makeText(HallRegisterActivity.this,"Password does not match",Toast.LENGTH_LONG).show();
+                    Toast.makeText(HallRegisterActivity.this, "Please fill all details", Toast.LENGTH_LONG).show();
+                    //Snackbar snackbar = Snackbar.make(view, "Please fill all details", Snackbar.LENGTH_LONG);
+                    //snackbar.show();
                 }
-
                 else
                 {
-                    boolean isinserted =dh.insertHallRegisterData(hallNameStr, hallEmailStr,hallAddressStr, hallAboutStr, hallPasswordStr);
+                    if (!hallPasswordStr.equals(hallConfirmpassStr)) {
+                        Toast.makeText(HallRegisterActivity.this, "Password does not match", Toast.LENGTH_LONG).show();
+                    }
 
-                    if (isinserted == true)
-                        Toast.makeText(getApplicationContext(), "Hall Registered successfully", Toast.LENGTH_SHORT).show();
+                    else {
 
-                    else
-                        Toast.makeText(getApplicationContext(), "Hall Register Unsuccessfull", Toast.LENGTH_LONG).show();
+                        boolean isinserted = dh.insertHallRegisterData(hallNameStr, hallEmailStr, hallAddressStr, hallAboutStr, hallPasswordStr);
 
+                        if (isinserted == true) {
+                            Toast.makeText(getApplicationContext(), "Hall Registered successfully", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Hall Register Unsuccessfull", Toast.LENGTH_LONG).show();
+                        }
+                    }
                 }
-
             }
         });
 

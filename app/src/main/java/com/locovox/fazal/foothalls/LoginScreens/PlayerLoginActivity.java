@@ -54,7 +54,9 @@ public class PlayerLoginActivity extends AppCompatActivity {
                 }
 
                 else {
-                    startActivity(new Intent(PlayerLoginActivity.this, PlayerHomeActivity.class));
+                    Intent intent = new Intent(PlayerLoginActivity.this , PlayerHomeActivity.class);
+                    intent.putExtra("user", "Player");
+                    startActivity(intent);
                 }
             }
         });

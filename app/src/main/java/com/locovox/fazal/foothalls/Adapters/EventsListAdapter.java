@@ -26,10 +26,10 @@ import java.util.List;
 public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.ViewHolder> {
 
     private Context context;
-    private List<MD_Event> eventsList;
+    private MD_Hall eventsList;
     private EventsListAdapter.ClickListener clickListner;
 
-    public EventsListAdapter(Context context, List<MD_Event> mdEvents, EventsListAdapter.ClickListener listener) {
+    public EventsListAdapter(Context context, MD_Hall mdEvents, EventsListAdapter.ClickListener listener) {
         this.context = context;
         this.eventsList = mdEvents;
         this.clickListner = listener;
@@ -44,12 +44,12 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
-        holder.name.setText(eventsList.get(position).getName());
-        holder.duration.setText(String.valueOf(eventsList.get(position).getTimeInMins()));
-        holder.capacity.setText(String.valueOf(eventsList.get(position).getTotalCapacity()));
-        holder.date.setText(eventsList.get(position).getDate());
+        holder.name.setText(eventsList.getEventListInside().get(position).getName());
+        holder.duration.setText(String.valueOf(eventsList.getEventListInside().get(position).getTimeInMins()));
+        holder.capacity.setText(String.valueOf(eventsList.getEventListInside().get(position).getTotalCapacity()));
+        holder.date.setText(eventsList.getEventListInside().get(position).getDate());
 
-        final MD_Event item = eventsList.get(position);
+        final MD_Event item = eventsList.getEventListInside().get(position);
         holder.register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,7 +82,7 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Vi
 
     @Override
     public int getItemCount() {
-        return eventsList.size();
+        return eventsList.getEventListInside().size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

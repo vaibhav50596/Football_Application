@@ -14,7 +14,6 @@ public class MD_Event implements Serializable {
     public String date;
     public int timeInMins;
     public int totalCapacity;
-    public ArrayList<MD_Player> registeredPlayers;
 
     public int getId() {
         return id;

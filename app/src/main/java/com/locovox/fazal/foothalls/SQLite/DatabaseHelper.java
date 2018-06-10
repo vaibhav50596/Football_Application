@@ -53,6 +53,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String col_19 = "eventtime";
     public static final String col_20 = "hallcapacity";
 
+    public static final String TABLE_EVENT_POSITION = "eventdataposition";
+    public static final String col_21 = "eventname";
+    public static final String col_22 = "eventdate";
+    public static final String col_23 = "eventtime";
+    public static final String col_24 = "hallcapacity";
+    public static final String col_25 = "hallposition";
+    public static final String TABLE_EVENT_POS = "eventdatapos";
 
 
     //create statements
@@ -60,10 +67,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String SQL_HALL_DATA =" Create TABLE " + TABLE_HALL + "(" + col_12 + " TEXT, " + col_13 + " TEXT, " + col_14 + " integer , " + col_15 + " integer, " + col_16 + " float  )" ;
     private static final String SQL_REGISTER_HALL =" Create TABLE " + TABLE_HALLDATA + "(" + col_6 + " TEXT, " + col_7 + " TEXT, " + col_8 + " TEXT , " + col_9 + " TEXT, " + col_10 + " TEXT  )" ;
     private static final String SQL_EVENT_DATA =" Create TABLE " + TABLE_EVENT + "(" + col_17 + " TEXT, " + col_18 + " TEXT, " + col_19 + " TEXT , " + col_20 + " TEXT  )" ;
+    //private static final String SQL_EVENT_DATA_POSITION =" Create TABLE " + TABLE_EVENT_POSITION + "(" + col_21 + " TEXT, " + col_22 + " TEXT, " + col_23 + " TEXT , " + col_24 + " TEXT , " + col_25 + " integer )" ;
+    private static final String SQL_EVENT_DATA_POS =" Create TABLE " + TABLE_EVENT_POS + "(" + col_21 + " TEXT, " + col_22 + " TEXT, " + col_23 + " TEXT , " + col_24 + " TEXT , " + col_25 + " TEXT )" ;
 
 
     public DatabaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, 4);
+        super(context, DATABASE_NAME, null, 6);
     }
 
 
@@ -73,6 +82,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_HALL_DATA);
         db.execSQL(SQL_REGISTER_HALL);
         db.execSQL(SQL_EVENT_DATA);
+        db.execSQL(SQL_EVENT_DATA_POS);
     }
 
     @Override
@@ -81,6 +91,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE  IF EXISTS " + TABLE_HALL);
         db.execSQL("DROP TABLE  IF EXISTS " + TABLE_HALLDATA);
         db.execSQL("DROP TABLE  IF EXISTS " + TABLE_EVENT);
+        db.execSQL("DROP TABLE  IF EXISTS " + TABLE_EVENT_POS);
         onCreate(db);
 
     }
@@ -139,13 +150,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put(col_17, hallName);
-        cv.put(col_18, date);
-        cv.put(col_19, time);
-        cv.put(col_20, capacity);
-        ;
+        cv.put(col_21, hallName);
+        cv.put(col_22, date);
+        cv.put(col_23, time);
+        cv.put(col_24, capacity);
+        //cv.put(col_24, position);
 
-        long result = db.insert(TABLE_EVENT, null, cv);
+        long result = db.insert(TABLE_EVENT_POS, null, cv);
         if (result == -1)
             return false;
         else
@@ -194,15 +205,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public List<MD_Event> retrieveEventData(){
         List<MD_Event> eventList = new ArrayList<>();
-        String selectQuery = "SELECT  * FROM " + TABLE_EVENT;
+        //SQLiteDatabase db = this.getWritableDatabase();
+        //String columns[]={col_21,col_22,col_23,col_24,col_25};
+        //Cursor res = db.query("eventdatapos", columns , "hallposition=?",new String[]{position},null,null,null);
+
+        String selectQuery = "SELECT  * FROM " + TABLE_EVENT_POS ;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery(selectQuery, null);
 
         while(res.moveToNext()){
-            String name = res.getString(res.getColumnIndex(col_17));
-            String date = res.getString(res.getColumnIndex(col_18));
-            String time = res.getString(res.getColumnIndex(col_19));
-            String capacity = res.getString(res.getColumnIndex(col_20));
+            String name = res.getString(res.getColumnIndex(col_21));
+            String date = res.getString(res.getColumnIndex(col_22));
+            String time = res.getString(res.getColumnIndex(col_23));
+            String capacity = res.getString(res.getColumnIndex(col_24));
+            String pos = res.getString(res.getColumnIndex(col_24));
 
             MD_Event model = new MD_Event();
             model.setName(name);

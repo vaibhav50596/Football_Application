@@ -30,6 +30,7 @@ public class PlayerHomeActivity extends AppCompatActivity implements HallsListAd
     public static final String halldataloaded = "hallDataLoaded";
     public MD_Hall model = new MD_Hall();
     DatabaseHelper dh;
+    String user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +38,14 @@ public class PlayerHomeActivity extends AppCompatActivity implements HallsListAd
 
         setContentView(R.layout.activity_player_home);
         setTitle("Halls");
+        user = getIntent().getStringExtra("user");
         dh  = new DatabaseHelper(this);
         sharedpreferences = getSharedPreferences(String.valueOf(myPreference), Context.MODE_PRIVATE);
-        if(sharedpreferences.getString(halldataloaded, "").equals("") ||
-           sharedpreferences.getString(halldataloaded, "").equals(null)){
+        if((sharedpreferences.getString(halldataloaded, "").equals("") || sharedpreferences.getString(halldataloaded, "").equals(null))
+                && user.equalsIgnoreCase("Player")){
+            loadHallsData();
+        } else if((sharedpreferences.getString(halldataloaded, "").equals("") || sharedpreferences.getString(halldataloaded, "").equals(null))
+                && user.equalsIgnoreCase("Hall")) {
             loadHallsData();
         } else {
             hallsList = dh.retrieveHallData();
@@ -118,6 +123,7 @@ public class PlayerHomeActivity extends AppCompatActivity implements HallsListAd
         Intent intent = new Intent(PlayerHomeActivity.this , HallDetailActivity.class);
         intent.putExtra("HallDataModel", model);
         intent.putExtra("position", position);
+        intent.putExtra("user", user);
         startActivity(intent);
     }
 }

@@ -18,7 +18,7 @@ public class PlayerRegisterActivity extends AppCompatActivity {
     EditText playername,playeremail,playerage,password,confirmpass;
     Button register;
     String playerNameStr,playerEmailStr,playerPasswordStr,confirmPassStr="";
-    int playerAgeStr;
+    String playerAgeStr;
     DatabaseHelper dh;
     String playerPosition;
 
@@ -61,21 +61,31 @@ public class PlayerRegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 playerNameStr = playername.getText().toString();
-                playerAgeStr = Integer.parseInt(playerage.getText().toString());
+                playerAgeStr = playerage.getText().toString();
                 playerEmailStr = playeremail.getText().toString();
                 playerPasswordStr = password.getText().toString();
                 confirmPassStr = confirmpass.getText().toString();
 
-                if (!playerPasswordStr.equals(confirmPassStr)) {
-                    Toast.makeText(PlayerRegisterActivity.this, "Passwords dont match", Toast.LENGTH_LONG).show();
-                } else {
-                    boolean isInserted = dh.insertPlayerRegistration(playerNameStr, playerEmailStr, playerAgeStr, playerPasswordStr, playerPosition);
+                if(( playerNameStr == null || playerNameStr.equals("")) ||
+                        (playerAgeStr == null || playerAgeStr.equals("")) ||
+                        (playerEmailStr == null || playerEmailStr.equals("")) ||
+                        (playerPasswordStr == null || playerPasswordStr.equals("")) ||
+                        (confirmPassStr == null || confirmPassStr.equals("")))
+                {
+                    Toast.makeText(PlayerRegisterActivity.this, "Please fill all details", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    if (!playerPasswordStr.equals(confirmPassStr)) {
+                        Toast.makeText(PlayerRegisterActivity.this, "Passwords dont match", Toast.LENGTH_LONG).show();
+                    } else {
+                        boolean isInserted = dh.insertPlayerRegistration(playerNameStr, playerEmailStr, Integer.parseInt(playerAgeStr), playerPasswordStr, playerPosition);
 
-                    if (isInserted) {
-                        Toast.makeText(getApplicationContext(), "Registered successfully", Toast.LENGTH_SHORT).show();
-                    }
-                    else{
-                        Toast.makeText(getApplicationContext(), "Register Unsuccessful", Toast.LENGTH_LONG).show();
+                        if (isInserted) {
+                            Toast.makeText(getApplicationContext(), "Registered successfully", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            Toast.makeText(getApplicationContext(), "Register Unsuccessful", Toast.LENGTH_LONG).show();
+                        }
                     }
                 }
             }

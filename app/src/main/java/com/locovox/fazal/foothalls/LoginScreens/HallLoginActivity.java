@@ -52,7 +52,9 @@ Button login;
 
                 else
                 {
-                    startActivity(new Intent(HallLoginActivity.this, PlayerHomeActivity.class));
+                    Intent intent = new Intent(HallLoginActivity.this , PlayerHomeActivity.class);
+                    intent.putExtra("user", "Hall");
+                    startActivity(intent);
                 }
             }
         });
