@@ -230,6 +230,49 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return eventList;
     }
+
+    public boolean updateEventData(String hallName,String date,String time,String capacity)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(col_21, hallName);
+        cv.put(col_22, date);
+        cv.put(col_23, time);
+        cv.put(col_24, capacity);
+
+        String whereClause = "eventname=?";
+        String whereArgs[] = {hallName};
+        long result = db.update(TABLE_EVENT_POS, cv, whereClause, whereArgs);
+
+        if (result == -1)
+            return false;
+        else
+            return true;
+
+    }
+
+    public boolean updateHallData(String name, String address, int capacity, int reviews, float rating) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(col_12, name);
+        cv.put(col_13, address);
+        cv.put(col_14, capacity);
+        cv.put(col_15, reviews);
+        cv.put(col_16, rating);
+
+        String whereClause = "hallname=?";
+        String whereArgs[] = {name};
+        long result = db.update(TABLE_HALL, cv, whereClause, whereArgs);
+
+        if (result == -1)
+            return false;
+        else
+            return true;
+    }
+
+
+
+
 }
 
 

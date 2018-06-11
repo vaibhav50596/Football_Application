@@ -119,6 +119,7 @@ public class CreateEventFragment extends DialogFragment implements DialogInterfa
                        // intent.putExtra("EventDataModel", eventListModel);
                         intent.putExtra("user", userType);
                         intent.putExtra("position", position);
+                        //intent.putExtra("eventAdd", "eventAdded");
                         getDialog().dismiss();
                         startActivity(intent);
                     }

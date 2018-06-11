@@ -1,6 +1,8 @@
 package com.locovox.fazal.foothalls.Adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
@@ -8,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -26,10 +29,10 @@ import java.util.List;
 public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.ViewHolder> {
 
     private Context context;
-    private MD_Hall eventsList;
+    private List<MD_Event> eventsList;
     private EventsListAdapter.ClickListener clickListner;
 
-    public EventsListAdapter(Context context, MD_Hall mdEvents, EventsListAdapter.ClickListener listener) {
+    public EventsListAdapter(Context context, List<MD_Event> mdEvents, EventsListAdapter.ClickListener listener) {
         this.context = context;
         this.eventsList = mdEvents;
         this.clickListner = listener;
@@ -42,15 +45,53 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        holder.name.setText(eventsList.getEventListInside().get(position).getName());
-        holder.duration.setText(String.valueOf(eventsList.getEventListInside().get(position).getTimeInMins()));
-        holder.capacity.setText(String.valueOf(eventsList.getEventListInside().get(position).getTotalCapacity()));
-        holder.date.setText(eventsList.getEventListInside().get(position).getDate());
+        final int[] result = {0};
+        final boolean[] calculated = {false};
 
-        final MD_Event item = eventsList.getEventListInside().get(position);
+        holder.name.setText(eventsList.get(position).getName());
+        holder.duration.setText(String.valueOf(eventsList.get(position).getTimeInMins()));
+        holder.capacity.setText(String.valueOf(eventsList.get(position).getTotalCapacity()));
+        holder.date.setText(eventsList.get(position).getDate());
+
         holder.register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+                LayoutInflater inflater = LayoutInflater.from(context);
+                final View dialogView = inflater.inflate(R.layout.custom_dialog, null);
+                dialogBuilder.setView(dialogView);
+
+                final EditText edt = (EditText) dialogView.findViewById(R.id.playerNumbers);
+
+                dialogBuilder.setTitle("Register For Event");
+                dialogBuilder.setMessage("Number of Players");
+                dialogBuilder.setPositiveButton("Register", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        int playerRegistered = Integer.parseInt(edt.getText().toString());
+                        int capacity = eventsList.get(position).getTotalCapacity();
+                        result[0] = capacity - playerRegistered;
+                        calculated[0] = true;
+                        holder.capacity.setText(String.valueOf(result[0]));
+                        eventsList.get(position).setTotalCapacity(result[0]);
+                        clickListner.onClick(position, eventsList);
+
+                        dialog.dismiss();
+                    }
+                });
+                dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog b = dialogBuilder.create();
+                b.show();
+            }
+        });
+
+        //final MD_Event item = eventsList.getEventListInside().get(position);
+        /*holder.register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final int[] val = {0};
@@ -73,16 +114,17 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Vi
                                // item.totalCapacity = item.totalCapacity - val[0];
                                 //clickListner.onClick(remainingCapacityOfPlayers, position);
                             }
-                        }) */
+                        })
                         .show();
             }
         });
+       */
 
     }
 
     @Override
     public int getItemCount() {
-        return eventsList.getEventListInside().size();
+        return eventsList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -106,6 +148,6 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Vi
 
     public interface ClickListener {
 
-        void onClick();
+        void onClick(int position, List<MD_Event> eventUpdatedList);
     }
 }

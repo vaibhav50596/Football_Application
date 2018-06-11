@@ -22,6 +22,16 @@ public class MD_Hall implements Serializable {
     public String about;
     public String userType;
 
+    public int getCurrentCapacity() {
+        return currentCapacity;
+    }
+
+    public void setCurrentCapacity(int currentCapacity) {
+        this.currentCapacity = currentCapacity;
+    }
+
+    public int currentCapacity;
+
     public List<MD_Event> getEventListInside() {
         return eventListInside;
     }

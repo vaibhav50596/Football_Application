@@ -47,7 +47,8 @@ public class PlayerLoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 playerPasswordStr=playerpassword.getText().toString();
                 playerEmailStr=playeremail.getText().toString();
-               Cursor res =  dh.checkLoginDetailsForPlayers(playerEmailStr,playerPasswordStr);
+
+                Cursor res =  dh.checkLoginDetailsForPlayers(playerEmailStr,playerPasswordStr);
                 if (res.getCount() == 0) {
                     Toast.makeText(getApplicationContext(), "Wrong EmailId or Password ", Toast.LENGTH_LONG).show();
                     return;

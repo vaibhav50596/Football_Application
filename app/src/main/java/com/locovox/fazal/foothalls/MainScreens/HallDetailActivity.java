@@ -43,8 +43,10 @@ public class HallDetailActivity extends FragmentActivity implements EventsListAd
     Button createEvent;
     DatabaseHelper dh;
     int countEvents = 0;
-    String user,userType="";
+    String user,userType="", eventAdded;
     int position;
+    int eventCapacity = 0;
+    MD_Hall hallListModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,11 +72,12 @@ public class HallDetailActivity extends FragmentActivity implements EventsListAd
 
     public void init(){
         hallsList = dh.retrieveHallData();
-        MD_Hall hallListModel = (MD_Hall) getIntent().getSerializableExtra("HallDataModel");
+        hallListModel = (MD_Hall) getIntent().getSerializableExtra("HallDataModel");
         //MD_Event eventListModel = (MD_Event) getIntent().getSerializableExtra("EventDataModel");
         MD_Event eventListModel = new MD_Event();
         position = (int) getIntent().getIntExtra("position", 0);
         user = getIntent().getStringExtra("user");
+        //eventAdded = getIntent().getStringExtra("eventAdd");
         hallListModel = hallsList.get(position);
         hallName.setText(hallListModel.getName());
         hallAddress.setText(hallListModel.getAddress());
@@ -93,7 +96,7 @@ public class HallDetailActivity extends FragmentActivity implements EventsListAd
         //}
         //ArrayList<MD_Event> events = new ArrayList<>();
         eventList = dh.retrieveEventData();
-        hallListModel.setEventListInside(eventList);
+        //hallListModel.setEventListInside(eventList);
         //eventListModel = eventList.get(position);
         if(eventList != null && eventList.size() != 0) {
             /*for(int i=0; i<eventList.size(); i++){
@@ -105,9 +108,6 @@ public class HallDetailActivity extends FragmentActivity implements EventsListAd
             GridLayoutManager gridLayoutManager = new GridLayoutManager(HallDetailActivity.this, 2, GridLayoutManager.VERTICAL, false);
             eventsRecyclerView.setLayoutManager(gridLayoutManager);
 
-            //setting up EventListAdapter in events recycler view
-            eventsListAdapter = new EventsListAdapter(this, hallListModel, HallDetailActivity.this);
-            eventsRecyclerView.setAdapter(eventsListAdapter);
 
             if(eventsRecyclerView.getAdapter() != null){
                 countEvents = eventsRecyclerView.getAdapter().getItemCount();
@@ -119,23 +119,34 @@ public class HallDetailActivity extends FragmentActivity implements EventsListAd
             }
         }
 
-        if(countEvents < hallListModel.getTotalCapacity()){
+        eventsListAdapter = new EventsListAdapter(this, eventList, HallDetailActivity.this);
+        eventsRecyclerView.setAdapter(eventsListAdapter);
+
+        countEvents = eventsRecyclerView.getAdapter().getItemCount();
+        /*if(eventAdded != null && eventAdded.equalsIgnoreCase("eventAdded")){
+            hallListModel.setCurrentCapacity(hallListModel.getCurrentCapacity() - countEvents);
+            hallCapacity.setText(String.valueOf(hallListModel.getCurrentCapacity()));
+            dh.updateHallData(hallListModel.getName(),hallListModel.getAddress(),hallListModel.getTotalCapacity(),hallListModel.getReviewCount(),hallListModel.getRating());
+        } */
+
             createEvent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    FragmentManager fm = getFragmentManager();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("userType", user);
-                    bundle.putInt("position", position);
-                    CreateEventFragment dFragment = new CreateEventFragment();
-                    dFragment.setArguments(bundle);
-                    // Show DialogFragment and user is able to create event when recycler item count is less than total capacity of halls
-                    dFragment.show(fm, "Dialog Fragment");
+                    if(countEvents < hallListModel.getTotalCapacity()){
+                        FragmentManager fm = getFragmentManager();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("userType", user);
+                        bundle.putInt("position", position);
+                        CreateEventFragment dFragment = new CreateEventFragment();
+                        dFragment.setArguments(bundle);
+                        // Show DialogFragment and user is able to create event when recycler item count is less than total capacity of halls
+                        dFragment.show(fm, "Dialog Fragment");
+                    } else {
+                        Toast.makeText(HallDetailActivity.this, "You have exceeded limit of hall, please select another hall ", Toast.LENGTH_LONG).show();
+                    }
+
                 }
             });
-        } else {
-            Toast.makeText(HallDetailActivity.this, "You have exceeded limit of hall, please select another hall ", Toast.LENGTH_LONG).show();
-        }
 
 
         reviewsListAdapter = new ReviewsListAdapter(this,new ArrayList<MD_Review>());
@@ -148,10 +159,28 @@ public class HallDetailActivity extends FragmentActivity implements EventsListAd
     }
 
     @Override
-    public void onClick() {
+    public void onClick(int position, List<MD_Event> eventUpdatedList) {
         //eventList.get(position).setTotalCapacity(remainingCapacityOfPlayers);
         //Intent intent = new Intent(PlayerHomeActivity.this , HallDetailActivity.class);
         //intent.putExtra("HallDataModel", model);
         //startActivity(intent);
+        eventList = eventUpdatedList;
+
+        dh.updateEventData(eventList.get(position).getName(), eventList.get(position).getDate(), String.valueOf(eventList.get(position).getTimeInMins()), String.valueOf(eventList.get(position).getTotalCapacity()));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //setting up EventListAdapter in events recycler view
+        eventsListAdapter = new EventsListAdapter(this, eventList, HallDetailActivity.this);
+        eventsRecyclerView.setAdapter(eventsListAdapter);
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
     }
 }
