@@ -14,6 +14,24 @@ public class MD_Event implements Serializable {
     public String date;
     public int timeInMins;
     public int totalCapacity;
+    public String hallName;
+    public int hallPosition;
+
+    public String getHallName() {
+        return hallName;
+    }
+
+    public void setHallName(String hallName) {
+        this.hallName = hallName;
+    }
+
+    public int getHallPosition() {
+        return hallPosition;
+    }
+
+    public void setHallPosition(int hallPosition) {
+        this.hallPosition = hallPosition;
+    }
 
     public int getId() {
         return id;

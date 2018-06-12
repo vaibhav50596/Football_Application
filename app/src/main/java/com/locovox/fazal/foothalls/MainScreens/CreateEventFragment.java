@@ -35,7 +35,7 @@ public class CreateEventFragment extends DialogFragment implements DialogInterfa
     String eventNameStr, eventDurationStr, eventCapacityStr, eventSelectedDateStr;
     Button saveEvent;
     List<MD_Event> eventList = new ArrayList<>();
-    String userType;
+    String userType, hallName;
     int position;
 
     @Override
@@ -57,15 +57,6 @@ public class CreateEventFragment extends DialogFragment implements DialogInterfa
         init();
     }
 
-
-    /*@Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_create_event);
-        initViews();
-        init();
-    } */
-
     public void initViews(){
         eventName = (EditText) getView().findViewById(R.id.eventName);
         eventDuration = (EditText) getView().findViewById(R.id.eventDuration);
@@ -83,6 +74,7 @@ public class CreateEventFragment extends DialogFragment implements DialogInterfa
         final MD_Event eventListModel = new MD_Event();
         userType = getArguments().getString("userType");
         position = getArguments().getInt("position");
+        hallName = getArguments().getString("hallName");
         selectedDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -104,22 +96,19 @@ public class CreateEventFragment extends DialogFragment implements DialogInterfa
                    (eventSelectedDateStr.isEmpty() || eventSelectedDateStr.equals(null) || eventSelectedDateStr.equals("")))
                 {
                     Toast.makeText(getActivity(), "Please fill all details", Toast.LENGTH_LONG).show();
-                    //Snackbar snackbar = Snackbar.make(view, "Please fill all details", Snackbar.LENGTH_LONG);
-                    //snackbar.show();
 
                 } else {
                     eventListModel.setName(eventNameStr);
                     eventListModel.setTimeInMins(Integer.parseInt(eventDurationStr));
                     eventListModel.setTotalCapacity(Integer.parseInt(eventCapacityStr));
                     eventListModel.setDate(eventSelectedDateStr);
-                    boolean isinserted = dh.insertEventData(eventListModel.getName(),eventListModel.getDate(),String.valueOf(eventListModel.getTimeInMins()),String.valueOf(eventListModel.getTotalCapacity()));
+                    boolean isinserted = dh.insertEventData(eventListModel.getName(),eventListModel.getDate(),String.valueOf(eventListModel.getTimeInMins()),String.valueOf(eventListModel.getTotalCapacity()),hallName,position);
                     if(isinserted) {
                         Toast.makeText(getActivity(),"Event Created Successfully",Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(getActivity(), HallDetailActivity.class);
-                       // intent.putExtra("EventDataModel", eventListModel);
                         intent.putExtra("user", userType);
                         intent.putExtra("position", position);
-                        //intent.putExtra("eventAdd", "eventAdded");
+                        intent.putExtra("hallName", hallName);
                         getDialog().dismiss();
                         startActivity(intent);
                     }

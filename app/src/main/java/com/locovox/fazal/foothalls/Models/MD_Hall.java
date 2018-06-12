@@ -22,6 +22,16 @@ public class MD_Hall implements Serializable {
     public String about;
     public String userType;
 
+    public int getHallPosition() {
+        return hallPosition;
+    }
+
+    public void setHallPosition(int hallPosition) {
+        this.hallPosition = hallPosition;
+    }
+
+    public int hallPosition;
+
     public int getCurrentCapacity() {
         return currentCapacity;
     }

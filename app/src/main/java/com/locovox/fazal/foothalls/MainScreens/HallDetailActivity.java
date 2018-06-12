@@ -95,15 +95,11 @@ public class HallDetailActivity extends FragmentActivity implements EventsListAd
            // eventsMessageWarning.setVisibility(View.VISIBLE);
         //}
         //ArrayList<MD_Event> events = new ArrayList<>();
-        eventList = dh.retrieveEventData();
+        eventList = dh.retrieveEventData(hallListModel.getName(), hallListModel.getHallPosition());
         //hallListModel.setEventListInside(eventList);
         //eventListModel = eventList.get(position);
+
         if(eventList != null && eventList.size() != 0) {
-            /*for(int i=0; i<eventList.size(); i++){
-                eventAnotherList.add(eventListModel);
-            }*/
-            //eventList.add(eventListModel);
-            //eventList.add(eventListModel);
             //setting up GridLayoutManager in events recycler view
             GridLayoutManager gridLayoutManager = new GridLayoutManager(HallDetailActivity.this, 2, GridLayoutManager.VERTICAL, false);
             eventsRecyclerView.setLayoutManager(gridLayoutManager);
@@ -137,6 +133,7 @@ public class HallDetailActivity extends FragmentActivity implements EventsListAd
                         Bundle bundle = new Bundle();
                         bundle.putString("userType", user);
                         bundle.putInt("position", position);
+                        bundle.putString("hallName", hallListModel.getName());
                         CreateEventFragment dFragment = new CreateEventFragment();
                         dFragment.setArguments(bundle);
                         // Show DialogFragment and user is able to create event when recycler item count is less than total capacity of halls
@@ -160,10 +157,6 @@ public class HallDetailActivity extends FragmentActivity implements EventsListAd
 
     @Override
     public void onClick(int position, List<MD_Event> eventUpdatedList) {
-        //eventList.get(position).setTotalCapacity(remainingCapacityOfPlayers);
-        //Intent intent = new Intent(PlayerHomeActivity.this , HallDetailActivity.class);
-        //intent.putExtra("HallDataModel", model);
-        //startActivity(intent);
         eventList = eventUpdatedList;
 
         dh.updateEventData(eventList.get(position).getName(), eventList.get(position).getDate(), String.valueOf(eventList.get(position).getTimeInMins()), String.valueOf(eventList.get(position).getTotalCapacity()));
