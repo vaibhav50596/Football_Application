@@ -39,19 +39,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String col_8 = "address";
     public static final String col_9 = "about";
     public static final String col_10 = "hallpassword";
+
     //hall data table
     public static final String TABLE_HALL = "halldata";
     public static final String col_12 = "hallname";
+    //public static final String col_25 = "hallposition";
     public static final String col_13 = "halladdress";
     public static final String col_14 = "hallcapacity";
     public static final String col_15 = "hallreview";
     public static final String col_16 = "hallrating";
+
+
+
+
 
     public static final String TABLE_EVENT = "eventdata";
     public static final String col_17 = "eventname";
     public static final String col_18 = "eventdate";
     public static final String col_19 = "eventtime";
     public static final String col_20 = "hallcapacity";
+    //public static final String col_25 = "hallposition";
+   // public static final String col_12 = "hallname";
+
+
 
     public static final String TABLE_EVENT_POSITION = "eventdataposition";
     public static final String col_21 = "eventname";
@@ -61,6 +71,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String col_25 = "hallposition";
     public static final String TABLE_EVENT_POS = "eventdatapos";
 
+    public static final String TABLE_HALL_NEW = "newhalldata";
+    public static final String col_26 = "hallname";
+    public static final String col_27 = "hallposition";
+    public static final String col_28 = "halladdress";
+    public static final String col_29 = "hallcapacity";
+    public static final String col_30 = "hallreview";
+    public static final String col_31 = "hallrating";
+
+
+    public static final String TABLE_EVENT_NEW = "neweventdata";
+    public static final String col_32 = "eventname";
+    public static final String col_33 = "eventdate";
+    public static final String col_34 = "eventtime";
+    public static final String col_35 = "eventcapacity";
+    public static final String col_36 = "hallposition";
+    public static final String col_37 = "hallname";
+
+
 
     //create statements
     private static final String SQL_REGISTER_PLAYER =" Create TABLE " + TABLE_PLAYER + "(" + col_1 + " TEXT, " + col_2 + " TEXT, " + col_3 + " integer , " + col_4 + " TEXT, " + col_5 + " TEXT  )" ;
@@ -69,10 +97,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String SQL_EVENT_DATA =" Create TABLE " + TABLE_EVENT + "(" + col_17 + " TEXT, " + col_18 + " TEXT, " + col_19 + " TEXT , " + col_20 + " TEXT  )" ;
     //private static final String SQL_EVENT_DATA_POSITION =" Create TABLE " + TABLE_EVENT_POSITION + "(" + col_21 + " TEXT, " + col_22 + " TEXT, " + col_23 + " TEXT , " + col_24 + " TEXT , " + col_25 + " integer )" ;
     private static final String SQL_EVENT_DATA_POS =" Create TABLE " + TABLE_EVENT_POS + "(" + col_21 + " TEXT, " + col_22 + " TEXT, " + col_23 + " TEXT , " + col_24 + " TEXT , " + col_25 + " TEXT )" ;
-
+    private static final String SQL_HALL_DATA_NEW =" Create TABLE " + TABLE_HALL_NEW + "(" + col_26 + " TEXT, " + col_27 + " TEXT, " + col_28 + " TEXT , " + col_29 + " TEXT , " + col_30 + " TEXT , " + col_31 + " TEXT )" ;
+    private static final String SQL_EVENT_DATA_NEW =" Create TABLE " + TABLE_EVENT_NEW + "(" + col_32 + " TEXT, " + col_33 + " TEXT, " + col_34 + " TEXT , " + col_35 + " TEXT , " + col_36 + " TEXT , " + col_37 + " TEXT )" ;
 
     public DatabaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, 6);
+        super(context, DATABASE_NAME, null, 7);
     }
 
 
@@ -83,6 +112,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_REGISTER_HALL);
         db.execSQL(SQL_EVENT_DATA);
         db.execSQL(SQL_EVENT_DATA_POS);
+        db.execSQL(SQL_HALL_DATA_NEW);
+        db.execSQL(SQL_EVENT_DATA_NEW);
     }
 
     @Override
@@ -92,6 +123,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE  IF EXISTS " + TABLE_HALLDATA);
         db.execSQL("DROP TABLE  IF EXISTS " + TABLE_EVENT);
         db.execSQL("DROP TABLE  IF EXISTS " + TABLE_EVENT_POS);
+        db.execSQL("DROP TABLE  IF EXISTS " + SQL_HALL_DATA_NEW);
+        db.execSQL("DROP TABLE  IF EXISTS " + SQL_EVENT_DATA_NEW);
         onCreate(db);
 
     }
