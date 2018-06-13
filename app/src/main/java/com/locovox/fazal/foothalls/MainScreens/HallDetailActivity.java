@@ -159,7 +159,7 @@ public class HallDetailActivity extends FragmentActivity implements EventsListAd
     public void onClick(int position, List<MD_Event> eventUpdatedList) {
         eventList = eventUpdatedList;
 
-        dh.updateEventData(eventList.get(position).getName(), eventList.get(position).getDate(), String.valueOf(eventList.get(position).getTimeInMins()), String.valueOf(eventList.get(position).getTotalCapacity()));
+        dh.updateEventData(String.valueOf(eventList.get(position).getTotalCapacity()), eventList.get(position).getName());
     }
 
     @Override

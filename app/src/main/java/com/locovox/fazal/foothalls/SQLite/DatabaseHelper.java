@@ -217,18 +217,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public List<MD_Hall> retrieveHallData(){
         List<MD_Hall> hallsList = new ArrayList<>();
-        String selectQuery = "SELECT  * FROM " + TABLE_HALL;
+        String selectQuery = "SELECT  * FROM " + TABLE_HALL_NEW;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery(selectQuery, null);
 
         while(res.moveToNext()){
-            String name = res.getString(res.getColumnIndex(col_12));
-            String addr = res.getString(res.getColumnIndex(col_13));
-            String cap = res.getString(res.getColumnIndex(col_14));
-            String rev = res.getString(res.getColumnIndex(col_15));
-            String rate = res.getString(res.getColumnIndex(col_16));
+            String name = res.getString(res.getColumnIndex(col_26));
+            String position = res.getString(res.getColumnIndex(col_27));
+            String addr = res.getString(res.getColumnIndex(col_28));
+            String cap = res.getString(res.getColumnIndex(col_29));
+            String rev = res.getString(res.getColumnIndex(col_30));
+            String rate = res.getString(res.getColumnIndex(col_31));
+
             MD_Hall model = new MD_Hall();
             model.setName(name);
+            model.setHallPosition(Integer.parseInt(position));
             model.setAddress(addr);
             model.setTotalCapacity(Integer.parseInt(cap));
             model.setReviewCount(Integer.parseInt(rev));
@@ -238,11 +241,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return hallsList;
     }
 
-    public List<MD_Event> retrieveEventData(String eventName,String hallPosition){
+    public List<MD_Event> retrieveEventData(String hallName,String hallPosition){
         List<MD_Event> eventList = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
         String columns[]={col_32,col_33,col_34,col_35,col_36,col_37};
-        Cursor res = db.query("neweventdata", columns , "eventname=? and hallposition=?",new String[]{eventName,hallPosition},null,null,null);
+        Cursor res = db.query("neweventdata", columns , "hallname=? and hallposition=?",new String[]{hallName,hallPosition},null,null,null);
 
         //String selectQuery = "SELECT  * FROM " + TABLE_EVENT_NEW ;
        // SQLiteDatabase db = this.getReadableDatabase();
@@ -266,18 +269,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return eventList;
     }
 
-    public boolean updateEventData(String hallName,String date,String time,String capacity)
+    public boolean updateEventData(String capacity, String hallName)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put(col_21, hallName);
-        cv.put(col_22, date);
-        cv.put(col_23, time);
-        cv.put(col_24, capacity);
 
-        String whereClause = "eventname=?";
+        cv.put(col_35, capacity);
+        //cv.put(col_36, hallName);
+
+        String whereClause = "hallName=?";
         String whereArgs[] = {hallName};
-        long result = db.update(TABLE_EVENT_POS, cv, whereClause, whereArgs);
+        long result = db.update("neweventdata", cv, whereClause, whereArgs);
 
         if (result == -1)
             return false;
