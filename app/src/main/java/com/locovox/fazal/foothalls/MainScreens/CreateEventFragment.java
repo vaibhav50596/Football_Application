@@ -102,7 +102,7 @@ public class CreateEventFragment extends DialogFragment implements DialogInterfa
                     eventListModel.setTimeInMins(Integer.parseInt(eventDurationStr));
                     eventListModel.setTotalCapacity(Integer.parseInt(eventCapacityStr));
                     eventListModel.setDate(eventSelectedDateStr);
-                    boolean isinserted = dh.insertEventData(eventListModel.getName(),eventListModel.getDate(),String.valueOf(eventListModel.getTimeInMins()),String.valueOf(eventListModel.getTotalCapacity()),hallName,position);
+                    boolean isinserted = dh.insertEventData(eventListModel.getName(),eventListModel.getDate(),String.valueOf(eventListModel.getTimeInMins()),String.valueOf(eventListModel.getTotalCapacity()),hallName,String.valueOf(position));
                     if(isinserted) {
                         Toast.makeText(getActivity(),"Event Created Successfully",Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(getActivity(), HallDetailActivity.class);

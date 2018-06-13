@@ -85,8 +85,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String col_33 = "eventdate";
     public static final String col_34 = "eventtime";
     public static final String col_35 = "eventcapacity";
-    public static final String col_36 = "hallposition";
-    public static final String col_37 = "hallname";
+    public static final String col_36 = "hallname";
+    public static final String col_37 = "hallposition";
 
 
 
@@ -123,8 +123,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE  IF EXISTS " + TABLE_HALLDATA);
         db.execSQL("DROP TABLE  IF EXISTS " + TABLE_EVENT);
         db.execSQL("DROP TABLE  IF EXISTS " + TABLE_EVENT_POS);
-        db.execSQL("DROP TABLE  IF EXISTS " + SQL_HALL_DATA_NEW);
-        db.execSQL("DROP TABLE  IF EXISTS " + SQL_EVENT_DATA_NEW);
+        db.execSQL("DROP TABLE  IF EXISTS " + TABLE_HALL_NEW);
+        db.execSQL("DROP TABLE  IF EXISTS " + TABLE_EVENT_NEW);
         onCreate(db);
 
     }
@@ -147,16 +147,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //insert query for hall data
-    public boolean insertHallData(String name, String address, int capacity, int reviews, float rating) {
+    public boolean insertHallData(String name, String address, int capacity, int reviews, float rating,int hallPosition) {
+        String hallPos = String.valueOf(hallPosition);
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put(col_12, name);
-        cv.put(col_13, address);
-        cv.put(col_14, capacity);
-        cv.put(col_15, reviews);
-        cv.put(col_16, rating);
+        cv.put(col_26, name);
+        cv.put(col_27, hallPos);
+        cv.put(col_28, address);
+        cv.put(col_29, capacity);
+        cv.put(col_30, reviews);
+        cv.put(col_31, rating);
 
-        long result = db.insert(TABLE_HALL, null, cv);
+        long result = db.insert(TABLE_HALL_NEW, null, cv);
         if (result == -1)
             return false;
         else
@@ -179,17 +181,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
     }
 
-    public boolean insertEventData(String hallName,String date,String time,String capacity)
+    public boolean insertEventData(String eventName,String date,String time,String capacity,String hallName,String position)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put(col_21, hallName);
-        cv.put(col_22, date);
-        cv.put(col_23, time);
-        cv.put(col_24, capacity);
-        //cv.put(col_24, position);
-
-        long result = db.insert(TABLE_EVENT_POS, null, cv);
+        cv.put(col_32, eventName);
+        cv.put(col_33, date);
+        cv.put(col_34, time);
+        cv.put(col_35, capacity);
+        cv.put(col_36, hallName);
+        cv.put(col_37, position);
+        long result = db.insert(TABLE_EVENT_NEW, null, cv);
         if (result == -1)
             return false;
         else
@@ -236,22 +238,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return hallsList;
     }
 
-    public List<MD_Event> retrieveEventData(){
+    public List<MD_Event> retrieveEventData(String eventName,String hallPosition){
         List<MD_Event> eventList = new ArrayList<>();
-        //SQLiteDatabase db = this.getWritableDatabase();
-        //String columns[]={col_21,col_22,col_23,col_24,col_25};
-        //Cursor res = db.query("eventdatapos", columns , "hallposition=?",new String[]{position},null,null,null);
+        SQLiteDatabase db = this.getWritableDatabase();
+        String columns[]={col_32,col_33,col_34,col_35,col_36,col_37};
+        Cursor res = db.query("neweventdata", columns , "eventname=? and hallposition=?",new String[]{eventName,hallPosition},null,null,null);
 
-        String selectQuery = "SELECT  * FROM " + TABLE_EVENT_POS ;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery(selectQuery, null);
+        //String selectQuery = "SELECT  * FROM " + TABLE_EVENT_NEW ;
+       // SQLiteDatabase db = this.getReadableDatabase();
+       // Cursor res = db.rawQuery(selectQuery, null);
 
         while(res.moveToNext()){
-            String name = res.getString(res.getColumnIndex(col_21));
-            String date = res.getString(res.getColumnIndex(col_22));
-            String time = res.getString(res.getColumnIndex(col_23));
-            String capacity = res.getString(res.getColumnIndex(col_24));
-            String pos = res.getString(res.getColumnIndex(col_24));
+            String name = res.getString(res.getColumnIndex(col_32));
+            String date = res.getString(res.getColumnIndex(col_33));
+            String time = res.getString(res.getColumnIndex(col_34));
+            String capacity = res.getString(res.getColumnIndex(col_35));
+            String pos = res.getString(res.getColumnIndex(col_36));
 
             MD_Event model = new MD_Event();
             model.setName(name);

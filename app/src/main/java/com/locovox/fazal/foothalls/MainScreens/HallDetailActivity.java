@@ -95,7 +95,7 @@ public class HallDetailActivity extends FragmentActivity implements EventsListAd
            // eventsMessageWarning.setVisibility(View.VISIBLE);
         //}
         //ArrayList<MD_Event> events = new ArrayList<>();
-        eventList = dh.retrieveEventData(hallListModel.getName(), hallListModel.getHallPosition());
+        eventList = dh.retrieveEventData(hallListModel.getName(), String.valueOf(hallListModel.getHallPosition()));
         //hallListModel.setEventListInside(eventList);
         //eventListModel = eventList.get(position);
 

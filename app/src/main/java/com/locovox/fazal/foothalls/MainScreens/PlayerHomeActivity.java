@@ -67,7 +67,7 @@ public class PlayerHomeActivity extends AppCompatActivity implements HallsListAd
         int hallReviews[]={5,10,2,4,5,6,7,8,9,1};
 
         float ratings[]={2.6f,3f,4f,4.6f,4f,2.6f,3f,4f,4.6f,4f};
-
+        int hallPos[] = {0,1,2,3,4,5,6,7,8,9};
         for(int i=0; i<hallNames.length; i++){
             //insert static hall data into MD_Hall model
             model.setName(hallNames[i]);
@@ -75,10 +75,11 @@ public class PlayerHomeActivity extends AppCompatActivity implements HallsListAd
             model.setTotalCapacity(hallTotalCapacity[i]);
             model.setReviewCount(hallReviews[i]);
             model.setRating(ratings[i]);
+            model.setHallPosition(hallPos[i]);
             //insert static hall data into hallList list
             hallsList.add(model);
             //insert hall data in table
-            boolean isInserted = dh.insertHallData(model.getName(),model.getAddress(),model.getTotalCapacity(),model.getReviewCount(),model.getRating());
+            boolean isInserted = dh.insertHallData(model.getName(),model.getAddress(),model.getTotalCapacity(),model.getReviewCount(),model.getRating(),model.getHallPosition());
             if(isInserted){
                 SharedPreferences.Editor editor = sharedpreferences.edit();
                 editor.putString(halldataloaded, "DataLoaded");
