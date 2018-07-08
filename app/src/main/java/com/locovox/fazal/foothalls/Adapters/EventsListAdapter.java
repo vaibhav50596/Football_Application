@@ -31,11 +31,13 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Vi
     private Context context;
     private List<MD_Event> eventsList;
     private EventsListAdapter.ClickListener clickListner;
+    private String user;
 
-    public EventsListAdapter(Context context, List<MD_Event> mdEvents, EventsListAdapter.ClickListener listener) {
+    public EventsListAdapter(Context context, List<MD_Event> mdEvents, EventsListAdapter.ClickListener listener, String userType) {
         this.context = context;
         this.eventsList = mdEvents;
         this.clickListner = listener;
+        this.user = userType;
     }
 
     @Override
@@ -55,41 +57,45 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Vi
         holder.capacity.setText(String.valueOf(eventsList.get(position).getTotalCapacity()));
         holder.date.setText(eventsList.get(position).getDate());
 
-        holder.register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
-                LayoutInflater inflater = LayoutInflater.from(context);
-                final View dialogView = inflater.inflate(R.layout.custom_dialog, null);
-                dialogBuilder.setView(dialogView);
+        if(user.equalsIgnoreCase("Hall")){
+            holder.register.setVisibility(View.GONE);
+        } else {
 
-                final EditText edt = (EditText) dialogView.findViewById(R.id.playerNumbers);
+            holder.register.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+                    LayoutInflater inflater = LayoutInflater.from(context);
+                    final View dialogView = inflater.inflate(R.layout.custom_dialog, null);
+                    dialogBuilder.setView(dialogView);
 
-                dialogBuilder.setTitle("Register For Event");
-                dialogBuilder.setMessage("Number of Players");
-                dialogBuilder.setPositiveButton("Register", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        int playerRegistered = Integer.parseInt(edt.getText().toString());
-                        int capacity = eventsList.get(position).getTotalCapacity();
-                        result[0] = capacity - playerRegistered;
-                        calculated[0] = true;
-                        holder.capacity.setText(String.valueOf(result[0]));
-                        eventsList.get(position).setTotalCapacity(result[0]);
-                        clickListner.onClick(position, eventsList);
+                    final EditText edt = (EditText) dialogView.findViewById(R.id.playerNumbers);
 
-                        dialog.dismiss();
-                    }
-                });
-                dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        dialog.dismiss();
-                    }
-                });
-                AlertDialog b = dialogBuilder.create();
-                b.show();
-            }
-        });
+                    dialogBuilder.setTitle("Register For Event");
+                    dialogBuilder.setMessage("Number of Players");
+                    dialogBuilder.setPositiveButton("Register", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            int playerRegistered = Integer.parseInt(edt.getText().toString());
+                            int capacity = eventsList.get(position).getTotalCapacity();
+                            result[0] = capacity - playerRegistered;
+                            calculated[0] = true;
+                            holder.capacity.setText(String.valueOf(result[0]));
+                            eventsList.get(position).setTotalCapacity(result[0]);
+                            clickListner.onClick(position, eventsList);
 
+                            dialog.dismiss();
+                        }
+                    });
+                    dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            dialog.dismiss();
+                        }
+                    });
+                    AlertDialog b = dialogBuilder.create();
+                    b.show();
+                }
+            });
+        }
         //final MD_Event item = eventsList.getEventListInside().get(position);
         /*holder.register.setOnClickListener(new View.OnClickListener() {
             @Override

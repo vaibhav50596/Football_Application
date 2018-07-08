@@ -115,7 +115,7 @@ public class HallDetailActivity extends FragmentActivity implements EventsListAd
             }
         }
 
-        eventsListAdapter = new EventsListAdapter(this, eventList, HallDetailActivity.this);
+        eventsListAdapter = new EventsListAdapter(this, eventList, HallDetailActivity.this, user);
         eventsRecyclerView.setAdapter(eventsListAdapter);
 
         countEvents = eventsRecyclerView.getAdapter().getItemCount();
@@ -166,7 +166,7 @@ public class HallDetailActivity extends FragmentActivity implements EventsListAd
     protected void onResume() {
         super.onResume();
         //setting up EventListAdapter in events recycler view
-        eventsListAdapter = new EventsListAdapter(this, eventList, HallDetailActivity.this);
+        eventsListAdapter = new EventsListAdapter(this, eventList, HallDetailActivity.this, user);
         eventsRecyclerView.setAdapter(eventsListAdapter);
 
     }

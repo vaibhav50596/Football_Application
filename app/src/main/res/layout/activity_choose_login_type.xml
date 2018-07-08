@@ -93,6 +93,7 @@
             android:drawableStart="@drawable/ic_admin_24dp"
             android:textSize="@dimen/_18ssp"
             android:text="Admin Login"
+            android:visibility="gone"
             />
     </LinearLayout>
 
